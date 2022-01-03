@@ -12,9 +12,9 @@ class DoctrineSubscriber implements EventSubscriber
 {
     private $logger;
 
-    public function __construct(LoggerInterface $dblogger)
+    public function __construct(LoggerInterface $dbLogger)
     {
-        $this-> logger = $dblogger;
+        $this->logger = $dbLogger;
     }
 
     public function getSubscribedEvents()
@@ -28,25 +28,24 @@ class DoctrineSubscriber implements EventSubscriber
 
     public function postPersist(LifecycleEventArgs $args)
     {
-        $this->log('Ajouté', $args);
+        $this->log('ajouté', $args);
     }
 
     public function postUpdate(LifecycleEventArgs $args)
     {
-        $this->log('Modifié', $args);
+        $this->log('modifé', $args);
     }
 
     public function postRemove(LifecycleEventArgs $args)
     {
-        $this->log('Supprimé', $args);
+        $this->log('supprimé', $args);
     }
 
     public function log($message, $args)
     {
-        $entity  = $args->getEntity();
-        if(!$entity instanceof log){
-            $this-> logger->info($entity->getId() . $message);
+        $entity = $args->getEntity();
+        if (!($entity instanceof Log)) {
+            $this->logger->info($entity->getId() . $message);
         }
-       
     }
 }

@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -36,7 +38,7 @@ class User
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=Log::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Log", mappedBy="user")
      */
     private $logs;
 
@@ -49,14 +51,15 @@ class User
     {
         return $this->id;
     }
+
     /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
      */
-    public function getUsername(): ?string
+    public function getUsername(): string
     {
-        return $this->username;
+        return (string) $this->username;
     }
 
     public function setUsername(string $username): self
@@ -65,10 +68,17 @@ class User
 
         return $this;
     }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
+    }
+
+
     /**
      * @see UserInterface
      */
-    public function getRoles(): ?array
+    public function getRoles(): array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
@@ -83,12 +93,13 @@ class User
 
         return $this;
     }
+
     /**
      * @see UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -97,12 +108,16 @@ class User
 
         return $this;
     }
+
     /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
      * @see UserInterface
      */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+      
     }
 
     /**
@@ -114,7 +129,7 @@ class User
         // $this->plainPassword = null;
     }
 
-    /**
+        /**
      * @return Collection|Log[]
      */
     public function getLogs(): Collection

@@ -55,7 +55,6 @@ class Log
     private $user;
 
 
-
     public function getId(): ?int
     {
         return $this->id;
@@ -158,4 +157,3 @@ class Log
 
 
 }
-

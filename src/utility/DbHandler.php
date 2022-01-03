@@ -8,6 +8,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 class DbHandler extends AbstractProcessingHandler
 {
     private $manager;
+
     public function __construct(EntityManagerInterface $manager)
     {
         parent::__construct();
@@ -16,9 +17,8 @@ class DbHandler extends AbstractProcessingHandler
 
     protected function write(array $record): void
     {
-        //on envoi le log dans le db
+        // on envoi le log dans la db
         $log = new Log();
-
 
         $log->setContext($record['context']);
         $log->setLevel($record['level']);
@@ -26,7 +26,6 @@ class DbHandler extends AbstractProcessingHandler
         $log->setMessage($record['message']);
         $log->setExtra($record['extra']);
         $log->setUser($record['extra']['user']);
-
 
         $this->manager->persist($log);
         $this->manager->flush();
